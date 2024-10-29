@@ -1,18 +1,7 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(const MainApp());
-}
-
-class MainApp extends StatelessWidget {
-  const MainApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: BMIKalkulator(),
-    );
-  }
+  runApp(const MaterialApp(home: BMIKalkulator()));
 }
 
 class BMIKalkulator extends StatefulWidget {
@@ -23,63 +12,139 @@ class BMIKalkulator extends StatefulWidget {
 }
 
 class _BMIKalkulatorState extends State<BMIKalkulator> {
-  final TextEditingController _tezinaController = TextEditingController();
-  final TextEditingController _visinaController = TextEditingController();
-  String _result = '';
+  final visinaController = TextEditingController();
+  final tezinaController = TextEditingController();
+  final godineController = TextEditingController();
+  String spol = 'musko';
+  double? bmi;
+  String bmiKategorija = "";
+  String porukaGreske = "";
 
-  void _izracunajBMI() {
-    final double tezina = double.tryParse(_tezinaController.text) ?? 0;
-    final double visinaUCm = double.tryParse(_visinaController.text) ?? 0;
+  void izracunajBMI() {
+    double visina = double.tryParse(visinaController.text) ?? -1;
+    double tezina = double.tryParse(tezinaController.text) ?? -1;
+    int godine = int.tryParse(godineController.text) ?? -1;
 
-    if (tezina > 0 && visinaUCm > 0) {
-      final double visinaUMet = visinaUCm / 100;
-      final double bmi = tezina / (visinaUMet * visinaUMet);
+    // Validacija za visinu, težinu i godine
+    if (visina <= 0 || tezina <= 0 || godine <= 0) {
       setState(() {
-        _result = 'Tvoj BMI je: ${bmi.toStringAsFixed(2)}';
+        bmi = null;
+        bmiKategorija = "";
+        porukaGreske =
+            "Molimo unesite važeće pozitivne brojeve za visinu, težinu i godine.";
       });
+      return;
+    }
+
+    porukaGreske = "";
+
+    double rezultat = tezina / ((visina / 100) * (visina / 100));
+
+    if (spol == 'zensko') {
+      rezultat *= 0.95;
+    }
+
+    if (godine < 18) {
+      rezultat *= 0.9;
+    } else if (godine > 65) {
+      rezultat *= 1.1;
+    }
+
+    setState(() {
+      bmi = double.parse(rezultat.toStringAsFixed(2));
+      bmiKategorija = odrediBMICategoriju(bmi!);
+    });
+  }
+
+  String odrediBMICategoriju(double bmi) {
+    if (bmi < 18.5) {
+      return "Pothranjenost";
+    } else if (bmi >= 18.5 && bmi < 24.9) {
+      return "Normalna težina";
+    } else if (bmi >= 25 && bmi < 29.9) {
+      return "Prekomjerna težina";
     } else {
-      setState(() {
-        _result = 'Molimo vas unesite važeću kilažu i visinu';
-      });
+      return "Pretilost";
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('BMI Kalkulator'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            TextField(
-              controller: _tezinaController,
-              decoration: const InputDecoration(
-                labelText: 'Težina (kg)',
+      appBar: AppBar(title: Text("BMI Kalkulator")),
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              TextField(
+                controller: visinaController,
+                keyboardType: TextInputType.number,
+                decoration: const InputDecoration(
+                  labelText: "Visina (cm)",
+                  labelStyle: TextStyle(fontSize: 18),
+                ),
+                style: const TextStyle(fontSize: 20),
               ),
-              keyboardType: TextInputType.number,
-            ),
-            TextField(
-              controller: _visinaController,
-              decoration: const InputDecoration(
-                labelText: 'Visina (cm)',
+              const SizedBox(height: 10),
+              TextField(
+                controller: tezinaController,
+                keyboardType: TextInputType.number,
+                decoration: const InputDecoration(
+                  labelText: "Težina (kg)",
+                  labelStyle: TextStyle(fontSize: 18),
+                ),
+                style: const TextStyle(fontSize: 20),
               ),
-              keyboardType: TextInputType.number,
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _izracunajBMI,
-              child: const Text('Izračunaj BMI'),
-            ),
-            const SizedBox(height: 20),
-            Text(
-              _result,
-              style: const TextStyle(fontSize: 24),
-            ),
-          ],
+              const SizedBox(height: 10),
+              TextField(
+                controller: godineController,
+                keyboardType: TextInputType.number,
+                decoration: const InputDecoration(
+                  labelText: "Godine",
+                  labelStyle: TextStyle(fontSize: 18),
+                ),
+                style: const TextStyle(fontSize: 20),
+              ),
+              const SizedBox(height: 10),
+              DropdownButton<String>(
+                value: spol,
+                items: const [
+                  DropdownMenuItem(value: 'musko', child: Text("Muško")),
+                  DropdownMenuItem(value: 'zensko', child: Text("Žensko")),
+                ],
+                onChanged: (value) {
+                  setState(() {
+                    spol = value!;
+                  });
+                },
+                style: const TextStyle(fontSize: 20, color: Colors.black),
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: izracunajBMI,
+                child:
+                    const Text("Izračunaj BMI", style: TextStyle(fontSize: 20)),
+              ),
+              const SizedBox(height: 20),
+              if (porukaGreske.isNotEmpty)
+                Text(
+                  porukaGreske,
+                  style: const TextStyle(color: Colors.red, fontSize: 18),
+                  textAlign: TextAlign.center,
+                ),
+              if (bmi != null)
+                Column(
+                  children: [
+                    Text("Vaš BMI: $bmi", style: const TextStyle(fontSize: 22)),
+                    Text("Kategorija: $bmiKategorija",
+                        style: const TextStyle(fontSize: 22)),
+                  ],
+                ),
+            ],
+          ),
         ),
       ),
     );
