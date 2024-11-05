@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(const MaterialApp(home: BMIKalkulator()));
+  runApp(const MaterialApp(
+    home: BMIKalkulator(),
+  ));
 }
 
 class BMIKalkulator extends StatefulWidget {
@@ -15,6 +17,7 @@ class _BMIKalkulatorState extends State<BMIKalkulator> {
   final visinaController = TextEditingController();
   final tezinaController = TextEditingController();
   final godineController = TextEditingController();
+
   String spol = 'musko';
   double? bmi;
   String bmiKategorija = "";
@@ -25,7 +28,6 @@ class _BMIKalkulatorState extends State<BMIKalkulator> {
     double tezina = double.tryParse(tezinaController.text) ?? -1;
     int godine = int.tryParse(godineController.text) ?? -1;
 
-    // Validacija za visinu, težinu i godine
     if (visina <= 0 || tezina <= 0 || godine <= 0) {
       setState(() {
         bmi = null;
@@ -71,7 +73,11 @@ class _BMIKalkulatorState extends State<BMIKalkulator> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("BMI Kalkulator")),
+      appBar: AppBar(
+        title: const Text("BMI Kalkulator"),
+        backgroundColor: const Color(0xFF80CBC4),
+      ),
+      backgroundColor: const Color(0xFFE0F7FA),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(16),
@@ -84,9 +90,14 @@ class _BMIKalkulatorState extends State<BMIKalkulator> {
                 keyboardType: TextInputType.number,
                 decoration: const InputDecoration(
                   labelText: "Visina (cm)",
-                  labelStyle: TextStyle(fontSize: 18),
+                  labelStyle: TextStyle(color: Colors.black, fontSize: 18),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFF80CBC4)),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFF4DB6AC)),
+                  ),
                 ),
-                style: const TextStyle(fontSize: 20),
               ),
               const SizedBox(height: 10),
               TextField(
@@ -94,9 +105,14 @@ class _BMIKalkulatorState extends State<BMIKalkulator> {
                 keyboardType: TextInputType.number,
                 decoration: const InputDecoration(
                   labelText: "Težina (kg)",
-                  labelStyle: TextStyle(fontSize: 18),
+                  labelStyle: TextStyle(color: Colors.black, fontSize: 18),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFF80CBC4)),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFF4DB6AC)),
+                  ),
                 ),
-                style: const TextStyle(fontSize: 20),
               ),
               const SizedBox(height: 10),
               TextField(
@@ -104,9 +120,14 @@ class _BMIKalkulatorState extends State<BMIKalkulator> {
                 keyboardType: TextInputType.number,
                 decoration: const InputDecoration(
                   labelText: "Godine",
-                  labelStyle: TextStyle(fontSize: 18),
+                  labelStyle: TextStyle(color: Colors.black, fontSize: 18),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFF80CBC4)),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFF4DB6AC)),
+                  ),
                 ),
-                style: const TextStyle(fontSize: 20),
               ),
               const SizedBox(height: 10),
               DropdownButton<String>(
@@ -121,10 +142,14 @@ class _BMIKalkulatorState extends State<BMIKalkulator> {
                   });
                 },
                 style: const TextStyle(fontSize: 20, color: Colors.black),
+                dropdownColor: const Color(0xFFB2EBF2),
               ),
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: izracunajBMI,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF4DB6AC),
+                ),
                 child:
                     const Text("Izračunaj BMI", style: TextStyle(fontSize: 20)),
               ),
@@ -138,9 +163,16 @@ class _BMIKalkulatorState extends State<BMIKalkulator> {
               if (bmi != null)
                 Column(
                   children: [
-                    Text("Vaš BMI: $bmi", style: const TextStyle(fontSize: 22)),
-                    Text("Kategorija: $bmiKategorija",
-                        style: const TextStyle(fontSize: 22)),
+                    Text(
+                      "Vaš BMI: $bmi",
+                      style: const TextStyle(
+                          fontSize: 22, color: Color(0xFF00796B)),
+                    ),
+                    Text(
+                      "Kategorija: $bmiKategorija",
+                      style: const TextStyle(
+                          fontSize: 22, color: Color(0xFF00796B)),
+                    ),
                   ],
                 ),
             ],
