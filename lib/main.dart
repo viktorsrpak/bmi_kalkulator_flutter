@@ -1,9 +1,22 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(const MaterialApp(
-    home: BMIKalkulator(),
-  ));
+  runApp(const MainApp());
+}
+
+class MainApp extends StatelessWidget {
+  const MainApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const MaterialApp(
+      home: Scaffold(
+        body: Center(
+          child: BMIKalkulator(),
+        ),
+      ),
+    );
+  }
 }
 
 class BMIKalkulator extends StatefulWidget {
@@ -17,7 +30,6 @@ class _BMIKalkulatorState extends State<BMIKalkulator> {
   final visinaController = TextEditingController();
   final tezinaController = TextEditingController();
   final godineController = TextEditingController();
-
   String spol = 'musko';
   double? bmi;
   String bmiKategorija = "";
@@ -72,112 +84,72 @@ class _BMIKalkulatorState extends State<BMIKalkulator> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("BMI Kalkulator"),
-        backgroundColor: const Color(0xFF80CBC4),
-      ),
-      backgroundColor: const Color(0xFFE0F7FA),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              TextField(
-                controller: visinaController,
-                keyboardType: TextInputType.number,
-                decoration: const InputDecoration(
-                  labelText: "Visina (cm)",
-                  labelStyle: TextStyle(color: Colors.black, fontSize: 18),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Color(0xFF80CBC4)),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Color(0xFF4DB6AC)),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 10),
-              TextField(
-                controller: tezinaController,
-                keyboardType: TextInputType.number,
-                decoration: const InputDecoration(
-                  labelText: "Težina (kg)",
-                  labelStyle: TextStyle(color: Colors.black, fontSize: 18),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Color(0xFF80CBC4)),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Color(0xFF4DB6AC)),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 10),
-              TextField(
-                controller: godineController,
-                keyboardType: TextInputType.number,
-                decoration: const InputDecoration(
-                  labelText: "Godine",
-                  labelStyle: TextStyle(color: Colors.black, fontSize: 18),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Color(0xFF80CBC4)),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Color(0xFF4DB6AC)),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 10),
-              DropdownButton<String>(
-                value: spol,
-                items: const [
-                  DropdownMenuItem(value: 'musko', child: Text("Muško")),
-                  DropdownMenuItem(value: 'zensko', child: Text("Žensko")),
-                ],
-                onChanged: (value) {
-                  setState(() {
-                    spol = value!;
-                  });
-                },
-                style: const TextStyle(fontSize: 20, color: Colors.black),
-                dropdownColor: const Color(0xFFB2EBF2),
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: izracunajBMI,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF4DB6AC),
-                ),
-                child:
-                    const Text("Izračunaj BMI", style: TextStyle(fontSize: 20)),
-              ),
-              const SizedBox(height: 20),
-              if (porukaGreske.isNotEmpty)
-                Text(
-                  porukaGreske,
-                  style: const TextStyle(color: Colors.red, fontSize: 18),
-                  textAlign: TextAlign.center,
-                ),
-              if (bmi != null)
-                Column(
-                  children: [
-                    Text(
-                      "Vaš BMI: $bmi",
-                      style: const TextStyle(
-                          fontSize: 22, color: Color(0xFF00796B)),
-                    ),
-                    Text(
-                      "Kategorija: $bmiKategorija",
-                      style: const TextStyle(
-                          fontSize: 22, color: Color(0xFF00796B)),
-                    ),
-                  ],
-                ),
-            ],
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          TextField(
+            controller: visinaController,
+            keyboardType: TextInputType.number,
+            decoration: const InputDecoration(
+              labelText: "Visina (cm)",
+              border: OutlineInputBorder(),
+            ),
           ),
-        ),
+          const SizedBox(height: 16),
+          TextField(
+            controller: tezinaController,
+            keyboardType: TextInputType.number,
+            decoration: const InputDecoration(
+              labelText: "Težina (kg)",
+              border: OutlineInputBorder(),
+            ),
+          ),
+          const SizedBox(height: 16),
+          TextField(
+            controller: godineController,
+            keyboardType: TextInputType.number,
+            decoration: const InputDecoration(
+              labelText: "Godine",
+              border: OutlineInputBorder(),
+            ),
+          ),
+          const SizedBox(height: 16),
+          DropdownButton<String>(
+            value: spol,
+            items: const [
+              DropdownMenuItem(value: 'musko', child: Text("Muško")),
+              DropdownMenuItem(value: 'zensko', child: Text("Žensko")),
+            ],
+            onChanged: (value) {
+              setState(() {
+                spol = value!;
+              });
+            },
+            style: const TextStyle(fontSize: 20, color: Colors.black),
+          ),
+          const SizedBox(height: 20),
+          ElevatedButton(
+            onPressed: izracunajBMI,
+            child: const Text("Izračunaj BMI"),
+          ),
+          const SizedBox(height: 20),
+          if (porukaGreske.isNotEmpty)
+            Text(
+              porukaGreske,
+              style: const TextStyle(color: Colors.red, fontSize: 18),
+              textAlign: TextAlign.center,
+            ),
+          if (bmi != null)
+            Column(
+              children: [
+                Text("Vaš BMI: $bmi", style: const TextStyle(fontSize: 22)),
+                Text("Kategorija: $bmiKategorija",
+                    style: const TextStyle(fontSize: 22)),
+              ],
+            ),
+        ],
       ),
     );
   }
