@@ -9,9 +9,19 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       home: Scaffold(
-        body: Center(
+        appBar: AppBar(
+          title: Center(
+            child: Text(
+              "BMI Kalkulator",
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ),
+          backgroundColor: Color.fromARGB(255, 204, 154, 250),
+        ),
+        backgroundColor: Color.fromARGB(255, 204, 154, 250),
+        body: const Center(
           child: BMIKalkulator(),
         ),
       ),
@@ -96,6 +106,7 @@ class _BMIKalkulatorState extends State<BMIKalkulator> {
               labelText: "Visina (cm)",
               border: OutlineInputBorder(),
             ),
+            
           ),
           const SizedBox(height: 16),
           TextField(
