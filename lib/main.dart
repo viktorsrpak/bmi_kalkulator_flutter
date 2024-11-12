@@ -12,15 +12,15 @@ class MainApp extends StatelessWidget {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: Center(
+          title: const Center(
             child: Text(
               "BMI Kalkulator",
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
           ),
-          backgroundColor: Color.fromARGB(255, 204, 154, 250),
+          backgroundColor: Color.fromARGB(255, 255, 255, 255),
         ),
-        backgroundColor: Color.fromARGB(255, 204, 154, 250),
+        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
         body: const Center(
           child: BMIKalkulator(),
         ),
